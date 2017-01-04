@@ -1,4 +1,5 @@
 #include "edge.h"
+#include "vertex.h"
 
 Edge::Edge(int p, int q, int r, int t)
     :p(p)
