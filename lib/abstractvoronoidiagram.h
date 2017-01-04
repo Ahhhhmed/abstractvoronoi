@@ -7,7 +7,6 @@ class AbstractVoronoiDiagram
 
 public:
     AbstractVoronoiDiagram();
-    int Test(){return 32;}
 };
 
 #endif // ABSTRACTVORONOIDIAGRAM_H
