@@ -1,7 +1,7 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-#include "descriptor.h"
+class Descriptor;
 
 class Vertex;
 

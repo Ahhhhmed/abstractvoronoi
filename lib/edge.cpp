@@ -1,6 +1,6 @@
 #include "edge.h"
 #include "vertex.h"
-
+#include "descriptor.h"
 
 Edge::Edge()
 {

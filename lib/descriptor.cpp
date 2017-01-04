@@ -19,3 +19,13 @@ std::set<int> Descriptor::set() const
                              std::get<3>(b)
                          });
 }
+
+Edge *Descriptor::getEdge() const
+{
+    return edge;
+}
+
+void Descriptor::setEdge(Edge *value)
+{
+    edge = value;
+}
