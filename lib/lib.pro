@@ -14,14 +14,16 @@ SOURCES += abstractvoronoidiagram.cpp \
     descriptor.cpp \
     historygraph.cpp \
     historygraphnode.cpp \
-    graphvisitor.cpp
+    graphvisitor.cpp \
+    edge.cpp
 
 HEADERS += abstractvoronoidiagram.h \
     basicoperationprovider.h \
     descriptor.h \
     historygraph.h \
     historygraphnode.h \
-    graphvisitor.h
+    graphvisitor.h \
+    edge.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
