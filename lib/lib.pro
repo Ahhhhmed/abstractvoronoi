@@ -13,13 +13,15 @@ CONFIG += staticlib
 SOURCES += abstractvoronoidiagram.cpp \
     descriptor.cpp \
     historygraph.cpp \
-    historygraphnode.cpp
+    historygraphnode.cpp \
+    graphvisitor.cpp
 
 HEADERS += abstractvoronoidiagram.h \
     basicoperationprovider.h \
     descriptor.h \
     historygraph.h \
-    historygraphnode.h
+    historygraphnode.h \
+    graphvisitor.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

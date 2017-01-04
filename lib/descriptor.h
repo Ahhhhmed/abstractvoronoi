@@ -9,7 +9,7 @@ class Descriptor
 {
 public:
     Descriptor(description_tuple a, description_tuple b);
-    std::set<int> set();
+    std::set<int> set() const;
 private:
     description_tuple a,b;
 };

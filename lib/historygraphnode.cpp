@@ -6,17 +6,17 @@ HistoryGraphNode::HistoryGraphNode(Descriptor d)
 
 }
 
-Descriptor HistoryGraphNode::descriptor()
+Descriptor HistoryGraphNode::descriptor() const
 {
     return d;
 }
 
-size_t HistoryGraphNode::children_number()
+size_t HistoryGraphNode::children_number() const
 {
     return children.size();
 }
 
-HistoryGraphNode *HistoryGraphNode::child(size_t i)
+HistoryGraphNode *HistoryGraphNode::child(size_t i) const
 {
     return i< children.size()? children[i] : nullptr;
 }
@@ -24,4 +24,9 @@ HistoryGraphNode *HistoryGraphNode::child(size_t i)
 void HistoryGraphNode::addChild(HistoryGraphNode *g)
 {
     children.push_back(g);
+}
+
+void HistoryGraphNode::accept(GraphVisitor &v)
+{
+    v.VisitHistoryGraphNode(this);
 }

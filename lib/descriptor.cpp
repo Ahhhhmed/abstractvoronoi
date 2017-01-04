@@ -7,7 +7,7 @@ Descriptor::Descriptor(description_tuple a, description_tuple b)
 
 }
 
-std::set<int> Descriptor::set()
+std::set<int> Descriptor::set() const
 {
     return std::set<int>({std::get<0>(a),
                              std::get<1>(a),
