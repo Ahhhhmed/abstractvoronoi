@@ -11,11 +11,15 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += abstractvoronoidiagram.cpp \
-    descriptor.cpp
+    descriptor.cpp \
+    historygraph.cpp \
+    historygraphnode.cpp
 
 HEADERS += abstractvoronoidiagram.h \
     basicoperationprovider.h \
-    descriptor.h
+    descriptor.h \
+    historygraph.h \
+    historygraphnode.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
