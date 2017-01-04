@@ -5,6 +5,7 @@ class Edge;
 
 struct Vertex
 {
+    Vertex();
     Vertex(int p, int q, int r, Edge* edge);
 
     int p,q,r; // sites

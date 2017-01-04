@@ -7,6 +7,7 @@ class Vertex;
 
 struct Edge
 {
+    Edge();
     Edge(int p,
          int q,
          int r,
