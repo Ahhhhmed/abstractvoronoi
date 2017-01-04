@@ -7,7 +7,7 @@ struct Vertex
 {
     Vertex(int p, int q, int r, Edge* edge);
 
-    int p,q,r; // defining sites
+    int p,q,r; // sites
     Edge* edge;
 
 };
