@@ -1,6 +1,7 @@
 #include "abstractvoronoidiagram.h"
 
 #include <algorithm>
+#include <numeric>
 
 AbstractVoronoiDiagram &AbstractVoronoiDiagram::instance()
 {

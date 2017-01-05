@@ -1,7 +1,7 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
-class Edge;
+struct Edge;
 
 struct Vertex
 {

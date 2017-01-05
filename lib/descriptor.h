@@ -3,7 +3,7 @@
 #include <tuple>
 #include <set>
 
-class Edge;
+struct Edge;
 typedef std::tuple<int, int, int, int> description_tuple;
 
 class Descriptor

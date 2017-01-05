@@ -3,7 +3,7 @@
 
 class Descriptor;
 
-class Vertex;
+struct Vertex;
 
 struct Edge
 {
