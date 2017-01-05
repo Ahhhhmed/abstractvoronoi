@@ -11,19 +11,13 @@ struct Edge
     Edge(int p,
          int q,
          int r,
-         int t,
-         Descriptor* d,
-         Edge* twin,
-         Edge* next,
-         Edge* prev,
-         Vertex* origin,
-         int face);
+         int t);
 
     int p,q,r,t; // sites
     Descriptor* d;
     Edge *twin, *next, *prev;
     Vertex *origin;
-    int face;
+    int face();
 };
 
 #endif // EDGE_H

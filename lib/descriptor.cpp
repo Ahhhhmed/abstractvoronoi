@@ -4,6 +4,7 @@
 Descriptor::Descriptor(description_tuple a, description_tuple b)
     :a(a)
     ,b(b)
+    ,edge(nullptr)
 {
 
 }
