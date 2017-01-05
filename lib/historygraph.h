@@ -5,12 +5,11 @@
 #include "historygraphnode.h"
 #include "graphvisitor.h"
 
-class HistoryGraph
+struct HistoryGraph
 {
-public:
     HistoryGraph();
     void accept(GraphVisitor& v);
-private:
+
     std::vector<HistoryGraphNode*> source;
 };
 
