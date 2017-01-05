@@ -22,7 +22,8 @@ public:
     BasicOperationProvider *getProvider() const;
 
     void initialize(BasicOperationProvider* provider);
-
+    void proces_next_site();
+    void process_all_sites();
 private:
     AbstractVoronoiDiagram();
 

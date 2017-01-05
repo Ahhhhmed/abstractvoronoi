@@ -39,6 +39,18 @@ void AbstractVoronoiDiagram::initialize(BasicOperationProvider *provider)
     //intitialize starting structures...
 }
 
+void AbstractVoronoiDiagram::proces_next_site()
+{
+
+}
+
+void AbstractVoronoiDiagram::process_all_sites()
+{
+    while(current_step<=size){
+        proces_next_site();
+    }
+}
+
 PlanarGraph AbstractVoronoiDiagram::getDiagram() const
 {
     return diagram;
