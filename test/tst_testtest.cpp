@@ -2,6 +2,8 @@
 #include <QtTest>
 #include <descriptor.h>
 #include <historygraphnode.h>
+#include <abstractvoronoidiagram.h>
+#include <basicoperationprovider.h>
 
 class TestTest : public QObject
 {
@@ -15,6 +17,7 @@ private:
 private Q_SLOTS:
     void desctiptorTest();
     void historyGraphNodeTest();
+    void abstractVoronoiDiagramTest();
 };
 
 TestTest::TestTest()
@@ -33,6 +36,25 @@ void TestTest::historyGraphNodeTest()
     auto h = HistoryGraphNode(sampleDescriptor);
     QVERIFY(h.descriptor().set() == sampleDescriptor.set());
     QVERIFY(h.children_number() == 0);
+}
+
+class DummyProvider : public BasicOperationProvider{
+
+
+    // BasicOperationProvider interface
+public:
+    BasicOperationOutput basic_operation(int, int, int, int, int){
+        return intersection_empty;
+    }
+
+    int number_of_sites(){return 4;}
+};
+
+void TestTest::abstractVoronoiDiagramTest()
+{
+    AbstractVoronoiDiagram::instance().initialize(new DummyProvider());
+    QVERIFY(AbstractVoronoiDiagram::instance().getDiagram().edges.size() == 6);
+    QVERIFY(AbstractVoronoiDiagram::instance().getDiagram().vertices.size() == 2);
 }
 
 QTEST_APPLESS_MAIN(TestTest)
