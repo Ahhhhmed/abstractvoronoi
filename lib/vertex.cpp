@@ -6,11 +6,11 @@ Vertex::Vertex()
 
 }
 
-Vertex::Vertex(int p, int q, int r, Edge *edge)
+Vertex::Vertex(int p, int q, int r)
     :p(p)
     ,q(q)
     ,r(r)
-    ,edge(edge)
+    ,edge(nullptr)
 {
 
 }

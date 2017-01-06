@@ -1,7 +1,7 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-class Descriptor;
+class HistoryGraphNode;
 
 struct Vertex;
 
@@ -14,7 +14,7 @@ struct Edge
          int t);
 
     int p,q,r,t; // sites
-    Descriptor* d;
+    HistoryGraphNode* history_graph_node;
     Edge *twin, *next, *prev;
     Vertex *origin;
     int face();

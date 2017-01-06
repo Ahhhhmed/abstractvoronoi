@@ -6,7 +6,7 @@ struct Edge;
 struct Vertex
 {
     Vertex();
-    Vertex(int p, int q, int r, Edge* edge);
+    Vertex(int p, int q, int r);
 
     int p,q,r; // sites
     Edge* edge;
