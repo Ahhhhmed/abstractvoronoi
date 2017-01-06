@@ -110,7 +110,9 @@ public:
                                                      std::get<0>(node->descriptor().b),
                                                      current_site)
            ){
-            intersected.insert(node);
+            if(node->children_number() == 0){
+                intersected.insert(node);
+            }
             GraphVisitor::VisitHistoryGraphNode(node);
         }
 
