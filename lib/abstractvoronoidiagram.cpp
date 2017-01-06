@@ -1,6 +1,7 @@
 #include "abstractvoronoidiagram.h"
-#include <tuple>
+#include "graphvisitor.h"
 
+#include <tuple>
 #include <algorithm>
 #include <numeric>
 
@@ -94,6 +95,28 @@ void AbstractVoronoiDiagram::initialize(BasicOperationProvider *provider)
     diagram.edges.insert({edge11, edge12, edge21, edge22, edge31, edge32});
     diagram.vertices.insert({vertex1, vertex2});
 }
+
+class IntersectionVisitor : public GraphVisitor{
+    std::set<HistoryGraphNode*> intersected;
+    int current_site;
+    BasicOperationProvider* basic_operation;
+public:
+    IntersectionVisitor(int current_site, BasicOperationProvider* basic_operation)
+        :current_site(current_site), basic_operation(basic_operation) {}
+    void VisitHistoryGraphNode(HistoryGraphNode *node){
+        if (intersection_empty != basic_operation->basic_operation(std::get<2>(node->descriptor().a),
+                                                     std::get<0>(node->descriptor().a),
+                                                     std::get<1>(node->descriptor().a),
+                                                     std::get<0>(node->descriptor().b),
+                                                     current_site)
+           ){
+            intersected.insert(node);
+            GraphVisitor::VisitHistoryGraphNode(node);
+        }
+
+    }
+    std::set<HistoryGraphNode*> getIntersected() {return intersected;}
+};
 
 void AbstractVoronoiDiagram::proces_next_site()
 {
