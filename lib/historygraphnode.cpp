@@ -6,7 +6,7 @@ HistoryGraphNode::HistoryGraphNode(Descriptor d)
 
 }
 
-Descriptor HistoryGraphNode::descriptor() const
+Descriptor& HistoryGraphNode::descriptor()
 {
     return d;
 }

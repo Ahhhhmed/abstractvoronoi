@@ -9,7 +9,7 @@ class HistoryGraphNode
 {
 public:
     HistoryGraphNode(Descriptor d);
-    Descriptor descriptor() const;
+    Descriptor &descriptor();
     size_t children_number() const;
     HistoryGraphNode* child(size_t i) const;
     void addChild(HistoryGraphNode* g);
