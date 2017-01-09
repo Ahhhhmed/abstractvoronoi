@@ -108,13 +108,13 @@ public:
     IntersectionVisitor(int current_site, BasicOperationProvider* basic_operation)
         :current_site(current_site), basic_operation(basic_operation) {}
     void VisitHistoryGraphNode(HistoryGraphNode *node){
-        if (intersection_empty != basic_operation->basic_operation(std::get<2>(node->descriptor().a),
-                                                     std::get<0>(node->descriptor().a),
-                                                     std::get<1>(node->descriptor().a),
-                                                     std::get<0>(node->descriptor().b),
-                                                     current_site)
-           ){
-            if(node->children_number() == 0){
+        auto intersection_type = basic_operation->basic_operation(std::get<2>(node->descriptor().a),
+                                                                  std::get<0>(node->descriptor().a),
+                                                                  std::get<1>(node->descriptor().a),
+                                                                  std::get<0>(node->descriptor().b),
+                                                                  current_site);
+        if (intersection_empty != intersection_type){
+            if(node->children_number() == 0 && intersection_type != whole_edge){
                 intersected.insert(node);
             }
             GraphVisitor::VisitHistoryGraphNode(node);
@@ -131,19 +131,21 @@ void AbstractVoronoiDiagram::proces_next_site()
     history.accept(visitor);
     std::set<HistoryGraphNode*> intersected = visitor.getIntersected();
 
-    Edge* currentEdge = (*intersected.begin())->descriptor().getEdge();
-    while(whole_edge == provider->basic_operation(currentEdge->p,
-                                                  currentEdge->r,
-                                                  currentEdge->q,
-                                                  currentEdge->t,
-                                                  current_site)
-          ){
-        currentEdge = currentEdge->prev;
+    std::set<Edge*> edge_set;
+    //Edge* currentEdge = (*intersected.begin())->descriptor().getEdge();
+    for(auto node: intersected){
+        edge_set.insert(node->descriptor().getEdge());
+        edge_set.insert(node->descriptor().getEdge()->twin);
     }
 
-    std::stack<Edge*> edge_stack;
+    std::vector<Edge*> edge_stack;
+    Edge* currentEdge = nullptr;
+    while(edge_set.begin() != edge_set.end()){
+        if(currentEdge == nullptr) {
+            currentEdge = *edge_set.begin();
+            edge_set.erase(currentEdge);
+        }
 
-    while(!intersected.empty()){
         switch (provider->basic_operation(currentEdge->p,
                                           currentEdge->r,
                                           currentEdge->q,
@@ -151,19 +153,14 @@ void AbstractVoronoiDiagram::proces_next_site()
                                           current_site)
                 ){
         case whole_edge:
-                // dodaj u stack
             break;
         case segment_prq:
-                // napravi start za new edge ako ulazi i nabi u stack, ako izlazi dodaj novi edge i obradi ceo stack
             break;
         case segment_qtp:
-                // isto(ish) ko prq
             break;
         case segment_interior:
-                // dodaj odma novi edge
             break;
         case two_components:
-                // dobro pitanje
             break;
         default:
             break;
