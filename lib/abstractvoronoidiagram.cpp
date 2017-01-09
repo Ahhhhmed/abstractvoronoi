@@ -4,6 +4,7 @@
 #include <tuple>
 #include <algorithm>
 #include <numeric>
+#include <stack>
 
 AbstractVoronoiDiagram &AbstractVoronoiDiagram::instance()
 {
@@ -68,6 +69,7 @@ void AbstractVoronoiDiagram::initialize(BasicOperationProvider *provider)
     edge12->next = edge32;
     edge12->prev = edge32;
     edge12->history_graph_node = history.source[2];
+    history.source[2]->descriptor().setEdge(edge12);
 
     edge21->origin = vertex2;
     edge21->next = edge11;
@@ -78,6 +80,7 @@ void AbstractVoronoiDiagram::initialize(BasicOperationProvider *provider)
     edge22->next = edge31;
     edge22->prev = edge31;
     edge22->history_graph_node = history.source[0];
+    history.source[0]->descriptor().setEdge(edge22);
 
     edge31->origin = vertex2;
     edge31->next = edge22;
@@ -88,6 +91,7 @@ void AbstractVoronoiDiagram::initialize(BasicOperationProvider *provider)
     edge32->next = edge12;
     edge32->prev = edge12;
     edge32->history_graph_node = history.source[1];
+    history.source[1]->descriptor().setEdge(edge32);
 
     vertex1->edge = edge22;
     vertex2->edge = edge21;
@@ -122,7 +126,49 @@ public:
 
 void AbstractVoronoiDiagram::proces_next_site()
 {
+    auto current_site = sites[current_step];
+    IntersectionVisitor visitor(current_site, provider);
+    history.accept(visitor);
+    std::set<HistoryGraphNode*> intersected = visitor.getIntersected();
 
+    Edge* currentEdge = (*intersected.begin())->descriptor().getEdge();
+    while(whole_edge == provider->basic_operation(currentEdge->p,
+                                                  currentEdge->r,
+                                                  currentEdge->q,
+                                                  currentEdge->t,
+                                                  current_site)
+          ){
+        currentEdge = currentEdge->prev;
+    }
+
+    std::stack<Edge*> edge_stack;
+
+    while(!intersected.empty()){
+        switch (provider->basic_operation(currentEdge->p,
+                                          currentEdge->r,
+                                          currentEdge->q,
+                                          currentEdge->t,
+                                          current_site)
+                ){
+        case whole_edge:
+                // dodaj u stack
+            break;
+        case segment_prq:
+                // napravi start za new edge ako ulazi i nabi u stack, ako izlazi dodaj novi edge i obradi ceo stack
+            break;
+        case segment_qtp:
+                // isto(ish) ko prq
+            break;
+        case segment_interior:
+                // dodaj odma novi edge
+            break;
+        case two_components:
+                // dobro pitanje
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void AbstractVoronoiDiagram::process_all_sites()
