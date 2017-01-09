@@ -163,6 +163,80 @@ void AbstractVoronoiDiagram::proces_next_site()
         case segment_prq:
             // zavrsi prolaz
             if(!edge_stack.empty()){
+                Edge* firstEdge = edge_stack[0];
+
+                Edge* newEdge = new Edge(currentEdge->p,firstEdge->q,current_site,currentEdge->q);
+                Edge* newEdgeTwin = new Edge(current_site,currentEdge->q,currentEdge->p,firstEdge->q);
+
+                newEdge->twin = newEdgeTwin;
+                newEdgeTwin->twin = newEdge;
+
+                HistoryGraphNode* newNode = new HistoryGraphNode(
+                            Descriptor(std::make_tuple(firstEdge->q, currentEdge->p, current_site, firstEdge->q),
+                                       std::make_tuple(currentEdge->q, current_site, currentEdge->p, currentEdge->q))
+                );
+                newEdge->history_graph_node  = newNode;
+                newEdgeTwin->history_graph_node  = newNode;
+                newNode->descriptor().setEdge(newEdge);
+
+
+                Vertex* newVertex = new Vertex(currentEdge->p, currentEdge->q, current_site);
+
+                Edge* shortenedCurrentEdge = new Edge(currentEdge->p,current_site,currentEdge->q,currentEdge->t);
+                shortenedCurrentEdge->origin = newVertex;
+
+                if(currentEdge->twin->twin == currentEdge){
+                    currentEdge->twin = shortenedCurrentEdge;
+                } else {
+                    shortenedCurrentEdge->twin = currentEdge->twin->twin;
+                    currentEdge->twin->twin = shortenedCurrentEdge->twin;
+                }
+
+                HistoryGraphNode* shortenedCurrentNode = new HistoryGraphNode(
+                            Descriptor(std::make_tuple(current_site, currentEdge->p, currentEdge->q, current_site),
+                                       std::make_tuple(currentEdge->t, currentEdge->q, currentEdge->p, currentEdge->t))
+                );
+                shortenedCurrentNode->descriptor().setEdge(shortenedCurrentEdge);
+                shortenedCurrentEdge->history_graph_node = shortenedCurrentNode;
+
+                Edge* shortenedFirstEdge = new Edge(firstEdge->p,firstEdge->r,firstEdge->q,current_site);
+                shortenedFirstEdge->origin = firstEdge->origin;
+
+                //copy paste from above, should refactor into a separate function
+                if(currentEdge->twin->twin == currentEdge){
+                    currentEdge->twin = shortenedCurrentEdge;
+                } else {
+                    shortenedCurrentEdge->twin = currentEdge->twin->twin;
+                    currentEdge->twin->twin = shortenedCurrentEdge->twin;
+                }
+
+                HistoryGraphNode* shortenedFirstNode = new HistoryGraphNode(
+                            Descriptor(std::make_tuple(firstEdge->r, firstEdge->q, firstEdge->p, firstEdge->r),
+                                       std::make_tuple(current_site, firstEdge->p, firstEdge->q, current_site))
+                );
+                shortenedFirstNode->descriptor().setEdge(shortenedFirstEdge);
+                shortenedFirstEdge->history_graph_node = shortenedFirstNode;
+
+                shortenedFirstEdge->prev = firstEdge->prev;
+                firstEdge->prev->next = shortenedFirstEdge;
+
+                newEdge->prev = shortenedFirstEdge;
+                newEdge->next = shortenedCurrentEdge;
+
+                shortenedCurrentEdge->next = currentEdge->next;
+                currentEdge->next->prev = shortenedCurrentEdge;
+
+                firstEdge->history_graph_node->addChild(shortenedFirstNode);
+//                firstEdge->history_graph_node->addChild(newNode);
+
+                currentEdge->history_graph_node->addChild(shortenedCurrentNode);
+//                currentEdge->history_graph_node->addChild(newNode);
+
+                edge_stack.push_back(currentEdge);
+
+                for(auto e:edge_stack){
+                    e->history_graph_node->addChild(newNode);
+                }
 
             }
             break;
@@ -185,12 +259,12 @@ void AbstractVoronoiDiagram::process_all_sites()
     }
 }
 
-PlanarGraph AbstractVoronoiDiagram::getDiagram() const
+PlanarGraph &AbstractVoronoiDiagram::getDiagram()
 {
     return diagram;
 }
 
-HistoryGraph AbstractVoronoiDiagram::getHistory() const
+HistoryGraph &AbstractVoronoiDiagram::getHistory()
 {
     return history;
 }

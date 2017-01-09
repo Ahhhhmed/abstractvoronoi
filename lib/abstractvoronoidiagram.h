@@ -15,9 +15,9 @@ public:
 
     static AbstractVoronoiDiagram &instance();
 
-    HistoryGraph getHistory() const;
+    HistoryGraph& getHistory();
 
-    PlanarGraph getDiagram() const;
+    PlanarGraph& getDiagram();
 
     BasicOperationProvider *getProvider() const;
 
