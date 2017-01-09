@@ -9,8 +9,8 @@ struct Edge
 {
     Edge();
     Edge(int p,
-         int q,
          int r,
+         int q,
          int t);
 
     int p,q,r,t; // sites

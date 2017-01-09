@@ -7,7 +7,7 @@ Edge::Edge()
 
 }
 
-Edge::Edge(int p, int q, int r, int t)
+Edge::Edge(int p, int r, int q, int t)
     :p(p)
     ,q(q)
     ,r(r)
