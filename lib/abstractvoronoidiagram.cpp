@@ -145,6 +145,7 @@ void AbstractVoronoiDiagram::proces_next_site()
             currentEdge = *edge_set.begin();
             edge_set.erase(currentEdge);
         }
+        edge_set.erase(currentEdge);
 
         switch (provider->basic_operation(currentEdge->p,
                                           currentEdge->r,
@@ -153,14 +154,24 @@ void AbstractVoronoiDiagram::proces_next_site()
                                           current_site)
                 ){
         case whole_edge:
+            // ubaci u stack
+            edge_stack.push_back(currentEdge);
+            currentEdge = currentEdge->next;
             break;
         case segment_prq:
+            // zavrsi prolaz
+            if(!edge_stack.empty()){
+
+            }
             break;
         case segment_qtp:
+            // pocni prolza
             break;
         case segment_interior:
+            // povezi stvari
             break;
         case two_components:
+            // zavrsi i pocni novi ako nikad nije pocinjano odatle
             break;
         default:
             break;
