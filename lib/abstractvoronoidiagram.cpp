@@ -155,6 +155,8 @@ void AbstractVoronoiDiagram::proces_next_site()
                 ){
         case whole_edge:
             // ubaci u stack
+        case segment_qtp:
+            // pocni prolaz
             edge_stack.push_back(currentEdge);
             currentEdge = currentEdge->next;
             break;
@@ -163,9 +165,6 @@ void AbstractVoronoiDiagram::proces_next_site()
             if(!edge_stack.empty()){
 
             }
-            break;
-        case segment_qtp:
-            // pocni prolza
             break;
         case segment_interior:
             // povezi stvari
