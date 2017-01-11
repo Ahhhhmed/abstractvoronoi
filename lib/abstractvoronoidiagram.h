@@ -28,6 +28,7 @@ private:
     BasicOperationProvider* provider;
 
     void helperFunction(HistoryGraphNode* &shortenedCurrentNode, Edge* &currentEdge, Edge* &shortenedCurrentEdge, int current_site, bool currentNode);
+    void finish_pass(int current_site, std::vector<Edge *> &twin_edges, Edge *&currentEdge, std::vector<Edge *> &edge_stack, BasicOperationOutput firstIntersectionType, BasicOperationOutput currentIntersectionType);
 
     int current_step, size;
     std::vector<int> sites;

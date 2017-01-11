@@ -145,6 +145,91 @@ void AbstractVoronoiDiagram::helperFunction(HistoryGraphNode* &shortenedNode, Ed
     shortenedEdge->history_graph_node = shortenedNode;
 }
 
+void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &twin_edges, Edge* &currentEdge, std::vector<Edge*> &edge_stack, BasicOperationOutput firstIntersectionType, BasicOperationOutput currentIntersectionType)
+{
+    Edge* firstEdge = edge_stack[0];
+
+    Edge* newEdge = new Edge(currentEdge->p,firstEdge->q,current_site,currentEdge->q);
+    diagram.edges.insert(newEdge);
+    Edge* newEdgeTwin = new Edge(current_site,currentEdge->q,currentEdge->p,firstEdge->q);
+    diagram.edges.insert(newEdgeTwin);
+    twin_edges.push_back(newEdgeTwin);
+
+    newEdge->twin = newEdgeTwin;
+    newEdgeTwin->twin = newEdge;
+
+    HistoryGraphNode* newNode = new HistoryGraphNode(
+                Descriptor(std::make_tuple(firstEdge->q, currentEdge->p, current_site, firstEdge->q),
+                           std::make_tuple(currentEdge->q, current_site, currentEdge->p, currentEdge->q))
+    );
+    newEdge->history_graph_node  = newNode;
+    newEdgeTwin->history_graph_node  = newNode;
+    newNode->descriptor().setEdge(newEdge);
+
+
+    Vertex* newVertex = new Vertex(currentEdge->p, currentEdge->q, current_site);
+
+    Edge* shortenedCurrentEdge = new Edge(currentEdge->p,
+                                          current_site,
+                                          currentEdge->q,
+                                          currentIntersectionType == segment_qtp ? currentEdge->t : current_site);
+    diagram.edges.insert(shortenedCurrentEdge);
+    shortenedCurrentEdge->origin = newVertex;
+
+    HistoryGraphNode* shortenedCurrentNode;
+
+    helperFunction(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, true);
+
+    Edge* shortenedFirstEdge = new Edge(firstEdge->p,
+                                        currentIntersectionType == segment_prq ? firstEdge->r : current_site,
+                                        firstEdge->q,
+                                        current_site);
+    diagram.edges.insert(shortenedFirstEdge);
+    shortenedFirstEdge->origin = firstEdge->origin;
+
+    HistoryGraphNode* shortenedFirstNode;
+
+    helperFunction(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, false);
+
+    if(firstIntersectionType == segment_qtp){
+        if(firstEdge->prev == currentEdge){
+            shortenedFirstEdge->prev = shortenedCurrentEdge;
+        } else {
+            shortenedFirstEdge->prev = firstEdge->prev;
+            firstEdge->prev->next = shortenedFirstEdge;
+        }
+    }
+
+    newEdge->prev = shortenedFirstEdge;
+    shortenedFirstEdge->next = newEdge;
+
+    newEdge->next = shortenedCurrentEdge;
+    shortenedCurrentEdge->prev = newEdge;
+
+    if(currentIntersectionType == segment_prq){
+        if(currentEdge->next == firstEdge){
+            shortenedCurrentEdge->next = shortenedFirstEdge;
+        } else {
+            shortenedCurrentEdge->next = currentEdge->next;
+            currentEdge->next->prev = shortenedCurrentEdge;
+        }
+    }
+
+    firstEdge->history_graph_node->addChild(shortenedFirstNode);
+    diagram.edges.erase(firstEdge);
+
+    currentEdge->history_graph_node->addChild(shortenedCurrentNode);
+    diagram.edges.erase(currentEdge);
+
+    edge_stack.push_back(currentEdge);
+    for(auto e:edge_stack){
+        e->history_graph_node->addChild(newNode);
+        diagram.edges.erase(e);
+    }
+
+    edge_stack.clear();
+}
+
 void AbstractVoronoiDiagram::proces_next_site()
 {
     if (current_step > size) return;
@@ -160,6 +245,7 @@ void AbstractVoronoiDiagram::proces_next_site()
         edge_set.insert(node->descriptor().getEdge()->twin);
     }
 
+    BasicOperationOutput firstIntersectionType;
     std::vector<Edge*> edge_stack;
     std::vector<Edge*> twin_edges;
     Edge* currentEdge = nullptr;
@@ -175,85 +261,17 @@ void AbstractVoronoiDiagram::proces_next_site()
                                           currentEdge->t,
                                           current_site)
                 ){
-        case whole_edge:
         case segment_qtp:
+            firstIntersectionType = segment_qtp;
+            // fall through
+        case whole_edge:
             edge_stack.push_back(currentEdge);
             currentEdge = currentEdge->next;
             break;
         case segment_prq:
             // zavrsi prolaz
             if(!edge_stack.empty()){
-                Edge* firstEdge = edge_stack[0];
-
-                Edge* newEdge = new Edge(currentEdge->p,firstEdge->q,current_site,currentEdge->q);
-                diagram.edges.insert(newEdge);
-                Edge* newEdgeTwin = new Edge(current_site,currentEdge->q,currentEdge->p,firstEdge->q);
-                diagram.edges.insert(newEdgeTwin);
-                twin_edges.push_back(newEdgeTwin);
-
-                newEdge->twin = newEdgeTwin;
-                newEdgeTwin->twin = newEdge;
-
-                HistoryGraphNode* newNode = new HistoryGraphNode(
-                            Descriptor(std::make_tuple(firstEdge->q, currentEdge->p, current_site, firstEdge->q),
-                                       std::make_tuple(currentEdge->q, current_site, currentEdge->p, currentEdge->q))
-                );
-                newEdge->history_graph_node  = newNode;
-                newEdgeTwin->history_graph_node  = newNode;
-                newNode->descriptor().setEdge(newEdge);
-
-
-                Vertex* newVertex = new Vertex(currentEdge->p, currentEdge->q, current_site);
-
-                Edge* shortenedCurrentEdge = new Edge(currentEdge->p,current_site,currentEdge->q,currentEdge->t);
-                diagram.edges.insert(shortenedCurrentEdge);
-                shortenedCurrentEdge->origin = newVertex;
-
-                HistoryGraphNode* shortenedCurrentNode;
-
-                helperFunction(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, true);
-
-                Edge* shortenedFirstEdge = new Edge(firstEdge->p,firstEdge->r,firstEdge->q,current_site);
-                diagram.edges.insert(shortenedFirstEdge);
-                shortenedFirstEdge->origin = firstEdge->origin;
-
-                HistoryGraphNode* shortenedFirstNode;
-
-                helperFunction(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, false);
-
-                if(firstEdge->prev == currentEdge){
-                    shortenedFirstEdge->prev = shortenedCurrentEdge;
-                } else {
-                    shortenedFirstEdge->prev = firstEdge->prev;
-                    firstEdge->prev->next = shortenedFirstEdge;
-                }
-
-                newEdge->prev = shortenedFirstEdge;
-                shortenedFirstEdge->next = newEdge;
-
-                newEdge->next = shortenedCurrentEdge;
-                shortenedCurrentEdge->prev = newEdge;
-
-                if(currentEdge->next == firstEdge){
-                    shortenedCurrentEdge->next = shortenedFirstEdge;
-                } else {
-                    shortenedCurrentEdge->next = currentEdge->next;
-                    currentEdge->next->prev = shortenedCurrentEdge;
-                }
-
-                firstEdge->history_graph_node->addChild(shortenedFirstNode);
-                diagram.edges.erase(firstEdge);
-
-                currentEdge->history_graph_node->addChild(shortenedCurrentNode);
-                diagram.edges.erase(currentEdge);
-
-                edge_stack.push_back(currentEdge);
-                for(auto e:edge_stack){
-                    e->history_graph_node->addChild(newNode);
-                    diagram.edges.erase(e);
-                }
-
-                edge_stack.clear();
+                finish_pass(current_site, twin_edges, currentEdge, edge_stack, firstIntersectionType, segment_prq);
             }
             currentEdge = nullptr;
             break;
@@ -262,6 +280,13 @@ void AbstractVoronoiDiagram::proces_next_site()
             break;
         case two_components:
             // zavrsi i pocni novi ako nikad nije pocinjano odatle
+            if(!edge_stack.empty()){
+                finish_pass(current_site, twin_edges, currentEdge, edge_stack, firstIntersectionType, two_components);
+            } else {
+                firstIntersectionType = segment_qtp;
+                edge_stack.push_back(currentEdge);
+                currentEdge = currentEdge->next;
+            }
             break;
         default:
             break;
