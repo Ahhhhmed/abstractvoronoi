@@ -8,12 +8,16 @@ VoronoiProvider::VoronoiProvider()
 
 BasicOperationOutput VoronoiProvider::basic_operation(int p, int r, int q, int t, int s)
 {
-
+    std::tuple<int,int,int> v = std::make_tuple(p,r,q);
+    if(v == std::make_tuple(0,1,2) || v == std::make_tuple(1,2,0) || v == std::make_tuple(2,0,1)){
+        return segment_qtp;
+    }
+    return segment_prq;
 }
 
 int VoronoiProvider::number_of_sites()
 {
-    return 2;
+    return 3;
 }
 
 void VoronoiProvider::DrawEdge(Edge *edge, QPainter &painter)
