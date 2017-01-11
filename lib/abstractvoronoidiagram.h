@@ -10,10 +10,6 @@
 class AbstractVoronoiDiagram
 {
 public:
-//    AbstractVoronoiDiagram(AbstractVoronoiDiagram const&) = delete;
-//    void operator=(AbstractVoronoiDiagram const&) = delete;
-
-//    static AbstractVoronoiDiagram &instance();
     AbstractVoronoiDiagram();
 
     HistoryGraph& getHistory();

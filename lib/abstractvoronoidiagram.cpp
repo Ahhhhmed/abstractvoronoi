@@ -6,13 +6,6 @@
 #include <numeric>
 #include <stack>
 
-//AbstractVoronoiDiagram &AbstractVoronoiDiagram::instance()
-//{
-//    static AbstractVoronoiDiagram inst;
-
-//    return inst;
-//}
-
 AbstractVoronoiDiagram::AbstractVoronoiDiagram()
 {
 
@@ -162,7 +155,6 @@ void AbstractVoronoiDiagram::proces_next_site()
     std::set<HistoryGraphNode*> intersected = visitor.getIntersected();
 
     std::set<Edge*> edge_set;
-    //Edge* currentEdge = (*intersected.begin())->descriptor().getEdge();
     for(auto node: intersected){
         edge_set.insert(node->descriptor().getEdge());
         edge_set.insert(node->descriptor().getEdge()->twin);
@@ -242,7 +234,10 @@ void AbstractVoronoiDiagram::proces_next_site()
                 edge_stack.push_back(currentEdge);
                 for(auto e:edge_stack){
                     e->history_graph_node->addChild(newNode);
+                    diagram.edges.erase(e);
                 }
+
+                edge_stack.clear();
             }
             break;
         case segment_interior:
