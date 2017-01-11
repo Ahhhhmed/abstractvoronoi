@@ -24,8 +24,8 @@ void AbstractVoronoiDiagram::initialize(BasicOperationProvider *provider)
 
     current_step = 3;
 
-    sites.resize(size);
-    std::iota(sites.begin(), sites.end(), 0);
+    sites.resize(size-2);
+    std::iota(sites.begin(), sites.end(), 3);
     std::random_shuffle(sites.begin(), sites.end());
 
     history.source.clear();
@@ -137,7 +137,7 @@ void AbstractVoronoiDiagram::helperFunction(HistoryGraphNode* &shortenedNode, Ed
         shortenedNode->descriptor().setEdge(shortenedEdge);
     } else {
         shortenedEdge->twin = edge->twin->twin;
-        edge->twin->twin = shortenedEdge->twin;
+        shortenedEdge->twin->twin = shortenedEdge;
 
         shortenedNode = shortenedEdge->twin->history_graph_node;
     }
@@ -149,7 +149,7 @@ void AbstractVoronoiDiagram::proces_next_site()
 {
     if (current_step > size) return;
 
-    auto current_site = sites[current_step++];
+    auto current_site = sites[(current_step++) - 3];
     IntersectionVisitor visitor(current_site, provider);
     history.accept(visitor);
     std::set<HistoryGraphNode*> intersected = visitor.getIntersected();
@@ -163,10 +163,9 @@ void AbstractVoronoiDiagram::proces_next_site()
     std::vector<Edge*> edge_stack;
     std::vector<Edge*> twin_edges;
     Edge* currentEdge = nullptr;
-    while(edge_set.begin() != edge_set.end()){
+    while(!edge_set.empty() || currentEdge != nullptr){
         if(currentEdge == nullptr) {
             currentEdge = *edge_set.begin();
-            edge_set.erase(currentEdge);
         }
         edge_set.erase(currentEdge);
 
@@ -222,14 +221,25 @@ void AbstractVoronoiDiagram::proces_next_site()
 
                 helperFunction(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, false);
 
-                shortenedFirstEdge->prev = firstEdge->prev;
-                firstEdge->prev->next = shortenedFirstEdge;
+                if(firstEdge->prev == currentEdge){
+                    shortenedFirstEdge->prev = shortenedCurrentEdge;
+                } else {
+                    shortenedFirstEdge->prev = firstEdge->prev;
+                    firstEdge->prev->next = shortenedFirstEdge;
+                }
 
                 newEdge->prev = shortenedFirstEdge;
-                newEdge->next = shortenedCurrentEdge;
+                shortenedFirstEdge->next = newEdge;
 
-                shortenedCurrentEdge->next = currentEdge->next;
-                currentEdge->next->prev = shortenedCurrentEdge;
+                newEdge->next = shortenedCurrentEdge;
+                shortenedCurrentEdge->prev = newEdge;
+
+                if(currentEdge->next == firstEdge){
+                    shortenedCurrentEdge->next = shortenedFirstEdge;
+                } else {
+                    shortenedCurrentEdge->next = currentEdge->next;
+                    currentEdge->next->prev = shortenedCurrentEdge;
+                }
 
                 firstEdge->history_graph_node->addChild(shortenedFirstNode);
                 diagram.edges.erase(firstEdge);
@@ -245,6 +255,7 @@ void AbstractVoronoiDiagram::proces_next_site()
 
                 edge_stack.clear();
             }
+            currentEdge = nullptr;
             break;
         case segment_interior:
             // povezi stvari
