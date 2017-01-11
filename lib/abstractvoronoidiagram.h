@@ -10,10 +10,11 @@
 class AbstractVoronoiDiagram
 {
 public:
-    AbstractVoronoiDiagram(AbstractVoronoiDiagram const&) = delete;
-    void operator=(AbstractVoronoiDiagram const&) = delete;
+//    AbstractVoronoiDiagram(AbstractVoronoiDiagram const&) = delete;
+//    void operator=(AbstractVoronoiDiagram const&) = delete;
 
-    static AbstractVoronoiDiagram &instance();
+//    static AbstractVoronoiDiagram &instance();
+    AbstractVoronoiDiagram();
 
     HistoryGraph& getHistory();
 
@@ -26,8 +27,6 @@ public:
     void process_all_sites();
     
 private:
-    AbstractVoronoiDiagram();
-
     HistoryGraph history;
     PlanarGraph diagram;
     BasicOperationProvider* provider;

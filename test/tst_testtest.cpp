@@ -52,9 +52,10 @@ public:
 
 void TestTest::abstractVoronoiDiagramTest()
 {
-    AbstractVoronoiDiagram::instance().initialize(new DummyProvider());
-    QVERIFY(AbstractVoronoiDiagram::instance().getDiagram().edges.size() == 6);
-    QVERIFY(AbstractVoronoiDiagram::instance().getDiagram().vertices.size() == 2);
+    AbstractVoronoiDiagram instance;
+    instance.initialize(new DummyProvider());
+    QVERIFY(instance.getDiagram().edges.size() == 6);
+    QVERIFY(instance.getDiagram().vertices.size() == 2);
 }
 
 QTEST_APPLESS_MAIN(TestTest)

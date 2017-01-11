@@ -6,12 +6,12 @@
 #include <numeric>
 #include <stack>
 
-AbstractVoronoiDiagram &AbstractVoronoiDiagram::instance()
-{
-    static AbstractVoronoiDiagram inst;
+//AbstractVoronoiDiagram &AbstractVoronoiDiagram::instance()
+//{
+//    static AbstractVoronoiDiagram inst;
 
-    return inst;
-}
+//    return inst;
+//}
 
 AbstractVoronoiDiagram::AbstractVoronoiDiagram()
 {
