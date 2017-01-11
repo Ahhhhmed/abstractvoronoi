@@ -21,3 +21,9 @@ void Diagram::processNext()
     diagram.proces_next_site();
     update();
 }
+
+void Diagram::prosessAll()
+{
+    diagram.process_all_sites();
+    update();
+}

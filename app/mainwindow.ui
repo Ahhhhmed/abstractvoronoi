@@ -6,44 +6,54 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
-    <height>497</height>
+    <width>692</width>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="Diagram" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>20</y>
-      <width>411</width>
-      <height>361</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>50</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add Next Site</string>
-    </property>
-   </widget>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="Diagram" name="widget" native="true">
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Add Next Site</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>Add All Sites</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>603</width>
+     <width>692</width>
      <height>21</height>
     </rect>
    </property>
@@ -67,6 +77,7 @@
    <container>1</container>
    <slots>
     <slot>processNext()</slot>
+    <slot>prosessAll()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -79,12 +90,28 @@
    <slot>processNext()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>541</x>
-     <y>95</y>
+     <x>41</x>
+     <y>411</y>
     </hint>
     <hint type="destinationlabel">
      <x>429</x>
      <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>widget</receiver>
+   <slot>prosessAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>497</x>
+     <y>412</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>487</x>
+     <y>238</y>
     </hint>
    </hints>
   </connection>

@@ -6,6 +6,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setFixedSize(width(), height());
+
+    QList<QToolBar *> allToolBars = findChildren<QToolBar *>();
+    for(QToolBar *tb: allToolBars) {
+        removeToolBar(tb);
+    }
 }
 
 MainWindow::~MainWindow()
