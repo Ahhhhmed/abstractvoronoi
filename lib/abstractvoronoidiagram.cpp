@@ -187,7 +187,9 @@ void AbstractVoronoiDiagram::proces_next_site()
                 Edge* firstEdge = edge_stack[0];
 
                 Edge* newEdge = new Edge(currentEdge->p,firstEdge->q,current_site,currentEdge->q);
+                diagram.edges.insert(newEdge);
                 Edge* newEdgeTwin = new Edge(current_site,currentEdge->q,currentEdge->p,firstEdge->q);
+                diagram.edges.insert(newEdgeTwin);
                 twin_edges.push_back(newEdgeTwin);
 
                 newEdge->twin = newEdgeTwin;
@@ -205,6 +207,7 @@ void AbstractVoronoiDiagram::proces_next_site()
                 Vertex* newVertex = new Vertex(currentEdge->p, currentEdge->q, current_site);
 
                 Edge* shortenedCurrentEdge = new Edge(currentEdge->p,current_site,currentEdge->q,currentEdge->t);
+                diagram.edges.insert(shortenedCurrentEdge);
                 shortenedCurrentEdge->origin = newVertex;
 
                 HistoryGraphNode* shortenedCurrentNode;
@@ -212,6 +215,7 @@ void AbstractVoronoiDiagram::proces_next_site()
                 helperFunction(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, true);
 
                 Edge* shortenedFirstEdge = new Edge(firstEdge->p,firstEdge->r,firstEdge->q,current_site);
+                diagram.edges.insert(shortenedFirstEdge);
                 shortenedFirstEdge->origin = firstEdge->origin;
 
                 HistoryGraphNode* shortenedFirstNode;
@@ -228,8 +232,10 @@ void AbstractVoronoiDiagram::proces_next_site()
                 currentEdge->next->prev = shortenedCurrentEdge;
 
                 firstEdge->history_graph_node->addChild(shortenedFirstNode);
+                diagram.edges.erase(firstEdge);
 
                 currentEdge->history_graph_node->addChild(shortenedCurrentNode);
+                diagram.edges.erase(currentEdge);
 
                 edge_stack.push_back(currentEdge);
                 for(auto e:edge_stack){
