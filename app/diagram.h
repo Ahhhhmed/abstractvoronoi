@@ -1,7 +1,10 @@
 #ifndef DIAGRAM_H
 #define DIAGRAM_H
 
+#include "voronoiprovider.h"
+
 #include <QWidget>
+#include <abstractvoronoidiagram.h>
 
 class Diagram : public QWidget
 {
@@ -15,6 +18,11 @@ protected:
 signals:
 
 public slots:
+    void processNext();
+
+private:
+    AbstractVoronoiDiagram diagram;
+    VoronoiProvider provider;
 };
 
 #endif // DIAGRAM_H

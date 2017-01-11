@@ -4,15 +4,19 @@
 
 Diagram::Diagram(QWidget *parent) : QWidget(parent)
 {
-
+    diagram.initialize(&provider);
 }
 
 void Diagram::paintEvent(QPaintEvent *event)
 {
        QPainter painter(this);
 
-       QPoint p(10, 10);
-       QPoint q(30, 30);
+       for(Edge* edge: diagram.getDiagram().edges){
+           provider.DrawEdge(edge, painter);
+       }
+}
 
-       painter.drawLine(p, q);
+void Diagram::processNext()
+{
+
 }

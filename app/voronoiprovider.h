@@ -13,7 +13,7 @@ public:
     BasicOperationOutput basic_operation(int p, int r, int q, int t, int s) override;
     int number_of_sites() override;
 
-    void DrawEdge(Edge* edge, QPainter painter);
+    void DrawEdge(Edge* edge, QPainter& painter);
 };
 
 #endif // VORONOIPROVIDER_H
