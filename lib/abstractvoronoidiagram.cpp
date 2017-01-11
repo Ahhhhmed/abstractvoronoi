@@ -172,7 +172,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
     Edge* shortenedCurrentEdge = new Edge(currentEdge->p,
                                           current_site,
                                           currentEdge->q,
-                                          currentIntersectionType == segment_qtp ? currentEdge->t : current_site);
+                                          currentIntersectionType == two_components ? current_site : currentEdge->t);
     diagram.edges.insert(shortenedCurrentEdge);
     shortenedCurrentEdge->origin = newVertex;
 
@@ -181,7 +181,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
     helperFunction(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, true);
 
     Edge* shortenedFirstEdge = new Edge(firstEdge->p,
-                                        currentIntersectionType == segment_prq ? firstEdge->r : current_site,
+                                        currentIntersectionType == two_components ? current_site : firstEdge->r,
                                         firstEdge->q,
                                         current_site);
     diagram.edges.insert(shortenedFirstEdge);
@@ -191,7 +191,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
 
     helperFunction(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, false);
 
-    if(firstIntersectionType == segment_qtp){
+    if(firstIntersectionType != two_components){
         if(firstEdge->prev == currentEdge){
             shortenedFirstEdge->prev = shortenedCurrentEdge;
         } else {
@@ -206,7 +206,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
     newEdge->next = shortenedCurrentEdge;
     shortenedCurrentEdge->prev = newEdge;
 
-    if(currentIntersectionType == segment_prq){
+    if(currentIntersectionType != two_components){
         if(currentEdge->next == firstEdge){
             shortenedCurrentEdge->next = shortenedFirstEdge;
         } else {
@@ -269,17 +269,16 @@ void AbstractVoronoiDiagram::proces_next_site()
             currentEdge = currentEdge->next;
             break;
         case segment_prq:
-            // zavrsi prolaz
             if(!edge_stack.empty()){
                 finish_pass(current_site, twin_edges, currentEdge, edge_stack, firstIntersectionType, segment_prq);
             }
             currentEdge = nullptr;
             break;
         case segment_interior:
-            // povezi stvari
+            edge_stack.push_back(currentEdge);
+            finish_pass(current_site, twin_edges, currentEdge, edge_stack, segment_interior, segment_interior);
             break;
         case two_components:
-            // zavrsi i pocni novi ako nikad nije pocinjano odatle
             if(!edge_stack.empty()){
                 finish_pass(current_site, twin_edges, currentEdge, edge_stack, firstIntersectionType, two_components);
             } else {
