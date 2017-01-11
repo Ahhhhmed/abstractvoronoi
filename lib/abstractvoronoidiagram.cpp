@@ -124,9 +124,37 @@ public:
     std::set<HistoryGraphNode*> getIntersected() {return intersected;}
 };
 
+void AbstractVoronoiDiagram::helperFunction(HistoryGraphNode* &shortenedNode, Edge* &edge, Edge* &shortenedEdge, int current_site, bool currentNode = true)
+{
+    if(edge->twin->twin == edge){
+        edge->twin = shortenedEdge;
+
+        if(currentNode){
+            shortenedNode = new HistoryGraphNode(
+                        Descriptor(std::make_tuple(current_site, edge->p, edge->q, current_site),
+                                   std::make_tuple(edge->t, edge->q, edge->p, edge->t))
+            );
+        } else {
+            shortenedNode = new HistoryGraphNode(
+                        Descriptor(std::make_tuple(edge->r, edge->q, edge->p, edge->r),
+                                   std::make_tuple(current_site, edge->p, edge->q, current_site))
+            );
+        }
+
+        shortenedNode->descriptor().setEdge(shortenedEdge);
+    } else {
+        shortenedEdge->twin = edge->twin->twin;
+        edge->twin->twin = shortenedEdge->twin;
+
+        shortenedNode = shortenedEdge->twin->history_graph_node;
+    }
+
+    shortenedEdge->history_graph_node = shortenedNode;
+}
+
 void AbstractVoronoiDiagram::proces_next_site()
 {
-    auto current_site = sites[current_step];
+    auto current_site = sites[current_step++];
     IntersectionVisitor visitor(current_site, provider);
     history.accept(visitor);
     std::set<HistoryGraphNode*> intersected = visitor.getIntersected();
@@ -139,6 +167,7 @@ void AbstractVoronoiDiagram::proces_next_site()
     }
 
     std::vector<Edge*> edge_stack;
+    std::vector<Edge*> twin_edges;
     Edge* currentEdge = nullptr;
     while(edge_set.begin() != edge_set.end()){
         if(currentEdge == nullptr) {
@@ -165,6 +194,7 @@ void AbstractVoronoiDiagram::proces_next_site()
 
                 Edge* newEdge = new Edge(currentEdge->p,firstEdge->q,current_site,currentEdge->q);
                 Edge* newEdgeTwin = new Edge(current_site,currentEdge->q,currentEdge->p,firstEdge->q);
+                twin_edges.push_back(newEdgeTwin);
 
                 newEdge->twin = newEdgeTwin;
                 newEdgeTwin->twin = newEdge;
@@ -185,46 +215,14 @@ void AbstractVoronoiDiagram::proces_next_site()
 
                 HistoryGraphNode* shortenedCurrentNode;
 
-                if(currentEdge->twin->twin == currentEdge){
-                    currentEdge->twin = shortenedCurrentEdge;
-
-                    shortenedCurrentNode = new HistoryGraphNode(
-                                Descriptor(std::make_tuple(current_site, currentEdge->p, currentEdge->q, current_site),
-                                           std::make_tuple(currentEdge->t, currentEdge->q, currentEdge->p, currentEdge->t))
-                    );
-                    shortenedCurrentNode->descriptor().setEdge(shortenedCurrentEdge);
-                } else {
-                    shortenedCurrentEdge->twin = currentEdge->twin->twin;
-                    currentEdge->twin->twin = shortenedCurrentEdge->twin;
-
-                    shortenedCurrentEdge->history_graph_node = shortenedCurrentEdge->twin->history_graph_node;
-                }
-
-                shortenedCurrentEdge->history_graph_node = shortenedCurrentNode;
+                helperFunction(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, true);
 
                 Edge* shortenedFirstEdge = new Edge(firstEdge->p,firstEdge->r,firstEdge->q,current_site);
                 shortenedFirstEdge->origin = firstEdge->origin;
 
                 HistoryGraphNode* shortenedFirstNode;
 
-                //copy paste from above, should refactor into a separate function
-                if(firstEdge->twin->twin == firstEdge){
-                    firstEdge->twin = shortenedCurrentEdge;
-
-                    shortenedFirstNode = new HistoryGraphNode(
-                                Descriptor(std::make_tuple(firstEdge->r, firstEdge->q, firstEdge->p, firstEdge->r),
-                                           std::make_tuple(current_site, firstEdge->p, firstEdge->q, current_site))
-                    );
-                    shortenedFirstNode->descriptor().setEdge(shortenedFirstEdge);
-                } else {
-                    shortenedFirstEdge->twin = firstEdge->twin->twin;
-                    firstEdge->twin->twin = shortenedFirstEdge->twin;
-
-                    shortenedFirstNode = shortenedFirstEdge->twin->history_graph_node;
-                }
-
-
-                shortenedFirstEdge->history_graph_node = shortenedFirstNode;
+                helperFunction(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, false);
 
                 shortenedFirstEdge->prev = firstEdge->prev;
                 firstEdge->prev->next = shortenedFirstEdge;
@@ -254,6 +252,12 @@ void AbstractVoronoiDiagram::proces_next_site()
         default:
             break;
         }
+    }
+
+    for(Edge* edge:twin_edges){
+        Edge* nextEdge = edge->twin->prev->twin->prev->twin;
+        edge->next = nextEdge;
+        nextEdge->prev = edge;
     }
 }
 

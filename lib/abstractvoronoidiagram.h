@@ -24,12 +24,15 @@ public:
     void initialize(BasicOperationProvider* provider);
     void proces_next_site();
     void process_all_sites();
+    
 private:
     AbstractVoronoiDiagram();
 
     HistoryGraph history;
     PlanarGraph diagram;
     BasicOperationProvider* provider;
+
+    void helperFunction(HistoryGraphNode* &shortenedCurrentNode, Edge* &currentEdge, Edge* &shortenedCurrentEdge, int current_site, bool currentNode);
 
     int current_step, size;
     std::vector<int> sites;
