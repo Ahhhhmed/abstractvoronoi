@@ -12,7 +12,7 @@ BasicOperationOutput VoronoiProvider::basic_operation(int p, int r, int q, int t
 
 int VoronoiProvider::number_of_sites()
 {
-
+    return 2;
 }
 
 void VoronoiProvider::DrawEdge(Edge *edge, QPainter &painter)

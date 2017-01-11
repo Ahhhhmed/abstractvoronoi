@@ -18,5 +18,6 @@ void Diagram::paintEvent(QPaintEvent *event)
 
 void Diagram::processNext()
 {
-
+    diagram.proces_next_site();
+    update();
 }

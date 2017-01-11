@@ -154,6 +154,8 @@ void AbstractVoronoiDiagram::helperFunction(HistoryGraphNode* &shortenedNode, Ed
 
 void AbstractVoronoiDiagram::proces_next_site()
 {
+    if (current_step > size) return;
+
     auto current_site = sites[current_step++];
     IntersectionVisitor visitor(current_site, provider);
     history.accept(visitor);
