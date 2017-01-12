@@ -311,6 +311,11 @@ PlanarGraph &AbstractVoronoiDiagram::getDiagram()
     return diagram;
 }
 
+AbstractVoronoiDiagram::AbstractVoronoiDiagram(BasicOperationProvider *provider)
+{
+    initialize(provider);
+}
+
 HistoryGraph &AbstractVoronoiDiagram::getHistory()
 {
     return history;
