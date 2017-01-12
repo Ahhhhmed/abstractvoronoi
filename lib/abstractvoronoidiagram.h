@@ -11,6 +11,7 @@ class AbstractVoronoiDiagram
 {
 public:
     AbstractVoronoiDiagram();
+    AbstractVoronoiDiagram(BasicOperationProvider* provider);
 
     HistoryGraph& getHistory();
 
