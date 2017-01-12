@@ -117,7 +117,7 @@ public:
     std::set<HistoryGraphNode*> getIntersected() {return intersected;}
 };
 
-void AbstractVoronoiDiagram::helperFunction(HistoryGraphNode* &shortenedNode, Edge* &edge, Edge* &shortenedEdge, int current_site, bool currentNode = true)
+void AbstractVoronoiDiagram::connectWithTwin(HistoryGraphNode* &shortenedNode, Edge* &edge, Edge* &shortenedEdge, int current_site, bool currentNode = true)
 {
     if(edge->twin->twin == edge){
         edge->twin = shortenedEdge;
@@ -178,7 +178,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
 
     HistoryGraphNode* shortenedCurrentNode;
 
-    helperFunction(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, true);
+    connectWithTwin(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, true);
 
     Edge* shortenedFirstEdge = new Edge(firstEdge->p,
                                         currentIntersectionType == two_components ? current_site : firstEdge->r,
@@ -189,7 +189,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
 
     HistoryGraphNode* shortenedFirstNode;
 
-    helperFunction(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, false);
+    connectWithTwin(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, false);
 
     if(firstIntersectionType != two_components){
         if(firstEdge->prev == currentEdge){
