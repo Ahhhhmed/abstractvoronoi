@@ -1,7 +1,7 @@
 #ifndef DIAGRAM_H
 #define DIAGRAM_H
 
-#include "voronoiprovider.h"
+#include "defaultvoronoiprovider.h"
 
 #include <QWidget>
 #include <abstractvoronoidiagram.h>
@@ -23,7 +23,7 @@ public slots:
 
 private:
     AbstractVoronoiDiagram diagram;
-    VoronoiProvider provider;
+    DefaultVoronoiProvider provider;
 };
 
 #endif // DIAGRAM_H

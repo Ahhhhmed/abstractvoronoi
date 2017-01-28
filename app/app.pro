@@ -15,11 +15,11 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     diagram.cpp \
-    voronoiprovider.cpp
+    defaultvoronoiprovider.cpp
 
 HEADERS  += mainwindow.h \
     diagram.h \
-    voronoiprovider.h
+    defaultvoronoiprovider.h
 
 FORMS    += mainwindow.ui
 
