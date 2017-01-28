@@ -126,7 +126,8 @@ void DefaultVoronoiProvider::DrawEdge(Edge *edge, QPainter &painter)
         painter.drawRect(minX, minY, (maxX-minX), (maxY-minY));
     } else {
         painter.drawLine(circumcircle(edge->p,edge->r,edge->q), circumcircle(edge->q, edge->t, edge->p));
-        painter.drawEllipse(sites[edge->p-1], 5,5);
+//        painter.drawEllipse(sites[edge->p-1], 6,6);
+        painter.drawText(sites[edge->p-1] + QPointF(-3,4), QString::number(edge->p));
     }
 }
 
