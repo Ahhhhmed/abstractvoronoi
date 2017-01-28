@@ -59,6 +59,22 @@ Starting structures are always the same. Namely region not belonging to `infinit
 
 Order of sites being added is important for time complexity. By taking sites at random expected runtime of the algorithm is `O(n*log(n))`.
 
+## App
+
+There is a simple application that serves as an example for how one can use this algorithm. It implements basic_operation for regular Voronoi diagrams in a plane and draws them on the screen. Sites are identifiable by the numbers in the position of a site.
+
+Incremental nature of the algorithm can be observed by adding sites one by one and seeing Voronoi diagrams of certain subsets of sites.
+
+Importing a diagram from a file is also possible. The format is just space separated numbers.
+
+Example file:
+```
+180 200
+140 200
+160 50
+170 150
+```
+
 ## Notes
 My implementation assumes general position of sites (all vertices are defined by exactly 3 sites). If sites are not in general position edges are not uniquely defined by four edges and structures called "descriptors" are defines. I did implement the descriptor structure but I did not use it during the algorithm.
 
