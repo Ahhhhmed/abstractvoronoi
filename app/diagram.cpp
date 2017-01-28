@@ -6,8 +6,8 @@ Diagram::Diagram(QWidget *parent)
     : QWidget(parent)
     ,provider({QPointF(180,200),
               QPointF(140,200),
-              QPointF(160,150),
-              QPointF(160,50)},
+              QPointF(160,50),
+              QPointF(170,150)},
               10,10,310,310)
 {
     diagram.initialize(&provider);
