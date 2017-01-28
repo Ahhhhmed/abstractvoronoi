@@ -5,6 +5,10 @@
 #include <abstractvoronoidiagram.h>
 #include <basicoperationprovider.h>
 
+#include <iostream>
+
+#include "dummyoperationprovider.h"
+
 class TestTest : public QObject
 {
     Q_OBJECT
@@ -38,24 +42,17 @@ void TestTest::historyGraphNodeTest()
     QVERIFY(h.children_number() == 0);
 }
 
-class DummyProvider : public BasicOperationProvider{
-
-
-    // BasicOperationProvider interface
-public:
-    BasicOperationOutput basic_operation(int, int, int, int, int){
-        return intersection_empty;
-    }
-
-    int number_of_sites(){return 4;}
-};
-
 void TestTest::abstractVoronoiDiagramTest()
 {
-    AbstractVoronoiDiagram instance;
-    instance.initialize(new DummyProvider());
-    QVERIFY(instance.getDiagram().edges.size() == 6);
-    QVERIFY(instance.getDiagram().vertices.size() == 2);
+    AbstractVoronoiDiagram diagram;
+    diagram.initialize(new DummyOperationProvider());
+    QVERIFY(diagram.getDiagram().edges.size() == 6);
+    QVERIFY(diagram.getDiagram().vertices.size() == 2);
+
+    diagram.process_all_sites();
+    Edge* e = (*diagram.getDiagram().edges.begin());
+    QVERIFY(e->next->twin->q == 1);
+
 }
 
 QTEST_APPLESS_MAIN(TestTest)
