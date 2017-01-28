@@ -59,8 +59,3 @@ void Diagram::Import()
         update();
     }
 }
-
-void Diagram::About()
-{
-
-}

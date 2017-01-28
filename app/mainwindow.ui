@@ -146,5 +146,24 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>About()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>597</x>
+     <y>401</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>620</x>
+     <y>377</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>About()</slot>
+ </slots>
 </ui>
