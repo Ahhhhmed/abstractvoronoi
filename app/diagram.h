@@ -20,6 +20,8 @@ signals:
 public slots:
     void processNext();
     void prosessAll();
+    void Import();
+    void About();
 
 private:
     AbstractVoronoiDiagram diagram;

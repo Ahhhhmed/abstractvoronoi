@@ -44,6 +44,20 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="text">
+         <string>Import Sites</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="text">
+         <string>About</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -78,6 +92,7 @@
    <slots>
     <slot>processNext()</slot>
     <slot>prosessAll()</slot>
+    <slot>Import()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -106,12 +121,28 @@
    <slot>prosessAll()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>497</x>
-     <y>412</y>
+     <x>342</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>487</x>
      <y>238</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>widget</receiver>
+   <slot>Import()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>447</x>
+     <y>406</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>529</x>
+     <y>217</y>
     </hint>
    </hints>
   </connection>
