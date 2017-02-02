@@ -14,7 +14,7 @@ Diagram::Diagram(QWidget *parent)
     : QWidget(parent)
     ,provider(new DefaultVoronoiProvider({QPointF(200,200),
               QPointF(130,200),
-              QPointF(160,50),
+              QPointF(360,240),
               QPointF(154,141)},
               minX,minY,maxX,maxY))
 {

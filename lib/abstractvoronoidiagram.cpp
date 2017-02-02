@@ -117,10 +117,10 @@ public:
     std::set<HistoryGraphNode*> getIntersected() {return intersected;}
 };
 
-void AbstractVoronoiDiagram::connectWithTwin(HistoryGraphNode* &shortenedNode, Edge* &edge, Edge* &shortenedEdge, int current_site, bool currentNode = true)
+void AbstractVoronoiDiagram::connectWithTwin(HistoryGraphNode* &shortenedNode, Edge* &edge, Edge* &shortenedEdge, int current_site, int &segmentInterior, bool currentNode = true)
 {
-    if(edge->twin->twin == edge){
-        edge->twin = shortenedEdge;
+    if(edge->twin->twin == edge || segmentInterior == 1){
+        if(segmentInterior != 1) edge->twin = shortenedEdge;
 
         if(currentNode){
             shortenedNode = new HistoryGraphNode(
@@ -134,9 +134,15 @@ void AbstractVoronoiDiagram::connectWithTwin(HistoryGraphNode* &shortenedNode, E
             );
         }
 
+        segmentInterior = 1;
         shortenedNode->descriptor().setEdge(shortenedEdge);
     } else {
-        shortenedEdge->twin = edge->twin->twin;
+        if(segmentInterior == 2){
+            shortenedEdge->twin = edge->twin->twin->next->next;
+            segmentInterior = 0;
+        } else {
+            shortenedEdge->twin = edge->twin->twin;
+        }
         shortenedEdge->twin->twin = shortenedEdge;
 
         shortenedNode = shortenedEdge->twin->history_graph_node;
@@ -177,8 +183,12 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
     shortenedCurrentEdge->origin = newVertex;
 
     HistoryGraphNode* shortenedCurrentNode;
+    int segment_int = 0;
+    if(currentIntersectionType == segment_interior){
+        segment_int = 2;
+    }
 
-    connectWithTwin(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, true);
+    connectWithTwin(shortenedCurrentNode, currentEdge, shortenedCurrentEdge, current_site, segment_int, true);
 
     Edge* shortenedFirstEdge = new Edge(firstEdge->p,
                                         currentIntersectionType == two_components ? current_site : firstEdge->r,
@@ -189,7 +199,10 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
 
     HistoryGraphNode* shortenedFirstNode;
 
-    connectWithTwin(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, false);
+    if(currentIntersectionType != segment_interior){
+        segment_int = 0;
+    }
+    connectWithTwin(shortenedFirstNode, firstEdge, shortenedFirstEdge, current_site, segment_int, false);
 
     if(firstIntersectionType != two_components){
         if(firstEdge->prev == currentEdge){
@@ -221,7 +234,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
     currentEdge->history_graph_node->addChild(shortenedCurrentNode);
     diagram.edges.erase(currentEdge);
 
-    edge_stack.push_back(currentEdge);
+    if(firstIntersectionType != segment_interior) edge_stack.push_back(currentEdge);
     for(auto e:edge_stack){
         e->history_graph_node->addChild(newNode);
         diagram.edges.erase(e);
@@ -277,6 +290,7 @@ void AbstractVoronoiDiagram::proces_next_site()
         case segment_interior:
             edge_stack.push_back(currentEdge);
             finish_pass(current_site, twin_edges, currentEdge, edge_stack, segment_interior, segment_interior);
+            currentEdge = nullptr;
             break;
         case two_components:
             if(!edge_stack.empty()){
@@ -288,6 +302,7 @@ void AbstractVoronoiDiagram::proces_next_site()
             }
             break;
         default:
+            currentEdge = nullptr;
             break;
         }
     }

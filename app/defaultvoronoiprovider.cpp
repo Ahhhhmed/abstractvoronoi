@@ -121,7 +121,27 @@ BasicOperationOutput DefaultVoronoiProvider::basic_operation(int p, int r, int q
         qDebug() << "segment_qtp";
         return segment_qtp;
     }
-    // other case
+    if(p == 0){
+        if(!orientation(prq, sites[s-1], qtp)){
+            qDebug() << "segment_interior";
+            return segment_interior;
+        } else {
+            qDebug() << "intersection_empty";
+            return intersection_empty;
+        }
+    }
+
+    if(q == 0){
+        if(orientation(prq, sites[s-1], qtp)){
+            qDebug() << "segment_interior";
+            return segment_interior;
+        } else {
+            qDebug() << "intersection_empty";
+            return intersection_empty;
+        }
+    }
+
+
     qDebug() << "intersection_empty";
     return intersection_empty;
 }
