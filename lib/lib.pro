@@ -8,7 +8,7 @@ QT       -= gui
 
 TARGET = lib
 TEMPLATE = lib
-CONFIG += staticlib
+CONFIG += staticlib c++11
 
 SOURCES += abstractvoronoidiagram.cpp \
     descriptor.cpp \
