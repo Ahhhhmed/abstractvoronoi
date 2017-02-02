@@ -49,13 +49,21 @@ Important thing to note it that sites do not need to have geometric representati
 I recommend reading about abstract Voronoi diagrams in the [article](http://www.sciencedirect.com/science/article/pii/0925772193900333?np=y) to get more familiar with them.
 
 ## Algorithm
-Algorithm is fully described in the [article](http://www.sciencedirect.com/science/article/pii/0925772193900333?np=y) but main ideas are as follow.
+Algorithm is fully described in the [article](http://www.sciencedirect.com/science/article/pii/0925772193900333?np=y). Main ideas are as follow.
 
 It is an incremental algorithm adding one site at the time. During the algorithm two structures are maintained. Diagram itself (`PlanarGraph` in my Implementation) and history graph (`HistoryGraph`).
 
 Starting structures are always the same. Namely region not belonging to `infinity` divided by two sites.
 
-`HistoryGraph` is a tree with nodes being edges of Voronoi diagram. It is used to find edges in current diagram that are affected by adding new site. Set of all foud edges is denoted E<sub>s</sub> in the article. Using E<sub>s</sub> new diagram and history graph are calculated.
+`HistoryGraph` is a tree with nodes being edges of Voronoi diagram. It is used to find edges in current diagram that are affected by adding new site. Set of all found edges is denoted E<sub>s</sub> in the article. Using E<sub>s</sub> the new diagram and history graph are calculated.
+
+If an edge in `HistoryGraph` is affected by a site then its parent is also affected. This is why E<sub>s</sub> can be found just by traversing `HistoryGraph` from the root going down only if current node is affected.
+
+Construction of new edges is as follows. Affected edges are traversed by paths entering and leaving the new region in the resulting graph. There is more then one path like this but the order of traversal is not important. New edge is added between entering point and leaving point of a path. Entering and leaving edges are replaced by shorter ones and internal edges are removed. All the new edges are then connected properly.
+
+Construction of new Vertices is done during the traversal of the edges. Each edge that has its origin in the area of the new site is removed. Origins of new edges are added to the set of Vertices.
+
+[![Voronoi.png](https://s27.postimg.org/ux3uimmur/Voronoi.png)](https://postimg.org/image/yth6em7u7/)
 
 Order of sites being added is important for time complexity. By taking sites at random expected runtime of the algorithm is `O(n*log(n))`.
 
