@@ -101,10 +101,10 @@ public:
     IntersectionVisitor(int current_site, BasicOperationProvider* basic_operation)
         :current_site(current_site), basic_operation(basic_operation) {}
     void VisitHistoryGraphNode(HistoryGraphNode *node){
-        auto intersection_type = basic_operation->basic_operation(std::get<2>(node->descriptor().a),
-                                                                  std::get<0>(node->descriptor().a),
-                                                                  std::get<1>(node->descriptor().a),
-                                                                  std::get<0>(node->descriptor().b),
+        auto intersection_type = basic_operation->basic_operation(node->descriptor().edge->p, // std::get<2>(node->descriptor().a),
+                                                                  node->descriptor().edge->r, //std::get<0>(node->descriptor().a),
+                                                                  node->descriptor().edge->q, //std::get<1>(node->descriptor().a),
+                                                                  node->descriptor().edge->t, //std::get<0>(node->descriptor().b),
                                                                   current_site);
         if (intersection_empty != intersection_type){
             if(node->children_number() == 0 && intersection_type != whole_edge){
@@ -215,7 +215,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
         }
     }
 
-    firstEdge->history_graph_node->addChild(shortenedFirstNode);
+    //firstEdge->history_graph_node->addChild(shortenedFirstNode);
     diagram.edges.erase(firstEdge);
 
     currentEdge->history_graph_node->addChild(shortenedCurrentNode);

@@ -4,6 +4,8 @@
 #include <utility>
 #include <QLineF>
 
+#include <QDebug>
+
 double Distance(const QPointF& p1, const QPointF& p2)
 {
     return QLineF(p1,p2).length();
@@ -12,7 +14,7 @@ double Distance(const QPointF& p1, const QPointF& p2)
 bool orientation(const QPointF& p1, const QPointF& p2, const QPointF& p3){
     QPointF a = p2-p1;
     QPointF b = p3-p1;
-    return a.x() * b.y() > b.x() * a.y();
+    return a.x() * b.y() < b.x() * a.y();
 }
 
 QPointF DefaultVoronoiProvider::circumcircle(int s0, int s1, int s2)
@@ -96,6 +98,11 @@ DefaultVoronoiProvider::DefaultVoronoiProvider(const std::vector<QPointF> &sites
 
 BasicOperationOutput DefaultVoronoiProvider::basic_operation(int p, int r, int q, int t, int s)
 {
+    qDebug() << "p: " << p
+             << ", r: " << r
+             << ", q: " << q
+             << ", t: " << t
+             << ", s: " << s;
     QPointF prq = circumcircle(p, r, q);
     QPointF qtp = circumcircle(q, t, p);
 
@@ -103,15 +110,19 @@ BasicOperationOutput DefaultVoronoiProvider::basic_operation(int p, int r, int q
     bool qtp_closest = is_closest_site(qtp, s, p, r, q, t);
 
     if(prq_closest && qtp_closest){
+        qDebug() << "whole_edge";
         return whole_edge;
     }
     if(prq_closest && !qtp_closest){
+        qDebug() << "segment_prq";
         return segment_prq;
     }
     if(qtp_closest && !prq_closest){
+        qDebug() << "segment_qtp";
         return segment_qtp;
     }
     // other case
+    qDebug() << "intersection_empty";
     return intersection_empty;
 }
 
