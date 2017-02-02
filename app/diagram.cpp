@@ -13,10 +13,11 @@
 Diagram::Diagram(QWidget *parent)
     : QWidget(parent)
     ,provider(new DefaultVoronoiProvider({QPointF(200,200),
-              QPointF(130,200),
-              QPointF(360,240),
-              QPointF(154,141)},
-              minX,minY,maxX,maxY))
+                                          QPointF(130,200),
+                                          QPointF(360,240),
+                                          QPointF(154,141),
+                                          QPointF(450, 200)},
+                                         minX,minY,maxX,maxY))
 {
     diagram.initialize(provider);
 }
