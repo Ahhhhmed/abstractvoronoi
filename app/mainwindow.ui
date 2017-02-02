@@ -47,7 +47,7 @@
       <item>
        <widget class="QPushButton" name="pushButton_3">
         <property name="text">
-         <string>Import Sites</string>
+         <string>Import Diagram</string>
         </property>
        </widget>
       </item>

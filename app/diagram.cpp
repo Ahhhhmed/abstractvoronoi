@@ -45,7 +45,7 @@ void Diagram::prosessAll()
 
 void Diagram::Import()
 {
-    QString fileName= QFileDialog::getOpenFileName(this, tr("Import"), ".");
+    QString fileName= QFileDialog::getOpenFileName(this, tr("Import"));
     if(fileName.length()){
         std::ifstream stream(fileName.toStdString());
         std::vector<QPointF> newSites;
