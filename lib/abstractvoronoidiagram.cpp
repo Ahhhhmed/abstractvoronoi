@@ -174,6 +174,7 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
 
 
     Vertex* newVertex = new Vertex(currentEdge->p, currentEdge->q, current_site);
+    diagram.vertices.insert(newVertex);
 
     Edge* shortenedCurrentEdge = new Edge(currentEdge->p,
                                           current_site,
@@ -238,6 +239,10 @@ void AbstractVoronoiDiagram::finish_pass(int current_site, std::vector<Edge*> &t
     for(auto e:edge_stack){
         e->history_graph_node->addChild(newNode);
         diagram.edges.erase(e);
+
+        if(e != firstEdge){
+            diagram.vertices.erase(e->origin);
+        }
     }
 
     edge_stack.clear();
