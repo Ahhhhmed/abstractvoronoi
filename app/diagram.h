@@ -24,7 +24,7 @@ public slots:
 
 private:
     AbstractVoronoiDiagram diagram;
-    DefaultVoronoiProvider provider;
+    DefaultVoronoiProvider *provider;
 };
 
 #endif // DIAGRAM_H

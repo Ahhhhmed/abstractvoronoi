@@ -12,13 +12,13 @@
 
 Diagram::Diagram(QWidget *parent)
     : QWidget(parent)
-    ,provider({QPointF(180,200),
-              QPointF(140,200),
+    ,provider(new DefaultVoronoiProvider({QPointF(200,200),
+              QPointF(130,200),
               QPointF(160,50),
-              QPointF(170,150)},
-              minX,minY,maxX,maxY)
+              QPointF(154,141)},
+              minX,minY,maxX,maxY))
 {
-    diagram.initialize(&provider);
+    diagram.initialize(provider);
 }
 
 void Diagram::paintEvent(QPaintEvent *event)
@@ -26,7 +26,7 @@ void Diagram::paintEvent(QPaintEvent *event)
        QPainter painter(this);
 
        for(Edge* edge: diagram.getDiagram().edges){
-           provider.DrawEdge(edge, painter);
+           provider->DrawEdge(edge, painter);
        }
 }
 
@@ -52,10 +52,12 @@ void Diagram::Import()
         while(!stream.eof()){
             int x,y;
             stream >> x >> y;
+            if(stream.eof()) break;
             newSites.push_back(QPointF(x,y));
         }
 
-        diagram.initialize(new DefaultVoronoiProvider(newSites,minX,minY,maxX,maxY));
+        provider = new DefaultVoronoiProvider(newSites,minX,minY,maxX,maxY);
+        diagram.initialize(provider);
         update();
     }
 }
