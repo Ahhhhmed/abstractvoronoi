@@ -37,7 +37,7 @@ void proces_next_site();
 void process_all_sites();
 ```
 
-`PlanarGraph` is a representation of Voronoi diagram in abstract setting. It is similar to GCLC structure with edges described with four sites and vertices described by 3 sites. Interpretation of edges and vertices is left to concrete application.
+`PlanarGraph` is a representation of Voronoi diagram in abstract setting. It is similar to DCEL structure with edges described with four sites and vertices described by 3 sites. Interpretation of edges and vertices is left to concrete application.
 
 ## Abstract Voronoi Diagrams
 Abstract Voronoi Diagrams are a generalization of Voronoi diagrams where any set of sites separated by nice enough curves. For two sites `p` and `q` a curve separating them is denoted by `J(p,q)`. Region belonging to `p` is denoted `D(p,q)` and `q`s region is `D(q,p)`. Region that "belongs" to `p` is defined as intersection of all `D(p,q)` for all `q`s.
