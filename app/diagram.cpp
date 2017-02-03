@@ -20,7 +20,7 @@ Diagram::Diagram(QWidget *parent)
     Random();
 }
 
-void Diagram::paintEvent(QPaintEvent *event)
+void Diagram::paintEvent(QPaintEvent *)
 {
        QPainter painter(this);
 
