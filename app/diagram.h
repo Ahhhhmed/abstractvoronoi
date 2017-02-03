@@ -21,6 +21,7 @@ public slots:
     void processNext();
     void prosessAll();
     void Import();
+    void Random();
 
 private:
     AbstractVoronoiDiagram diagram;

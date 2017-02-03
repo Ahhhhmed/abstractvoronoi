@@ -5,6 +5,10 @@
 #include <QFileDialog>
 #include <fstream>
 
+#include <random>
+std::random_device rd;
+std::mt19937 rng(rd());
+
 #define minX 10
 #define minY 10
 #define maxX 650
@@ -12,14 +16,8 @@
 
 Diagram::Diagram(QWidget *parent)
     : QWidget(parent)
-    ,provider(new DefaultVoronoiProvider({QPointF(200,200),
-                                          QPointF(130,200),
-                                          QPointF(360,240),
-                                          QPointF(154,141),
-                                          QPointF(450, 200)},
-                                         minX,minY,maxX,maxY))
 {
-    diagram.initialize(provider);
+    Random();
 }
 
 void Diagram::paintEvent(QPaintEvent *event)
@@ -61,4 +59,20 @@ void Diagram::Import()
         diagram.initialize(provider);
         update();
     }
+}
+
+void Diagram::Random(){
+
+    std::uniform_int_distribution<int> uniX(minX + 50,maxX - 50);
+    std::uniform_int_distribution<int> uniY(minY + 50,maxY - 50);
+
+    std::vector<QPointF> newSites;
+
+    for(int i = 0, n = std::uniform_int_distribution<int>(4,15)(rng); i < n; i++){
+        newSites.push_back(QPointF(uniX(rng),uniY(rng)));
+    }
+
+    provider = new DefaultVoronoiProvider(newSites,minX,minY,maxX,maxY);
+    diagram.initialize(provider);
+    update();
 }

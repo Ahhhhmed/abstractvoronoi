@@ -52,6 +52,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButton_5">
+        <property name="text">
+         <string>Random Diagram</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButton_4">
         <property name="text">
          <string>About</string>
@@ -93,6 +100,7 @@
     <slot>processNext()</slot>
     <slot>prosessAll()</slot>
     <slot>Import()</slot>
+    <slot>Random()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -121,7 +129,7 @@
    <slot>prosessAll()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>342</x>
+     <x>274</x>
      <y>421</y>
     </hint>
     <hint type="destinationlabel">
@@ -137,8 +145,8 @@
    <slot>Import()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>447</x>
-     <y>406</y>
+     <x>410</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>529</x>
@@ -159,6 +167,22 @@
     <hint type="destinationlabel">
      <x>620</x>
      <y>377</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_5</sender>
+   <signal>clicked()</signal>
+   <receiver>widget</receiver>
+   <slot>Random()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>498</x>
+     <y>412</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>513</x>
+     <y>257</y>
     </hint>
    </hints>
   </connection>
