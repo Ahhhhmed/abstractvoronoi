@@ -138,7 +138,7 @@ void AbstractVoronoiDiagram::connectWithTwin(HistoryGraphNode* &shortenedNode, E
         shortenedNode->descriptor().setEdge(shortenedEdge);
     } else {
         if(segmentInterior == 2){
-            shortenedEdge->twin = edge->twin->twin->next->next;
+            shortenedEdge->twin = edge->twin->twin->prev->prev;
             segmentInterior = 0;
         } else {
             shortenedEdge->twin = edge->twin->twin;
