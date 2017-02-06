@@ -68,7 +68,7 @@ void Diagram::Random(){
 
     std::vector<QPointF> newSites;
 
-    for(int i = 0, n = std::uniform_int_distribution<int>(4,15)(rng); i < n; i++){
+    for(int i = 0, n = std::uniform_int_distribution<int>(4,10)(rng); i < n; i++){
         newSites.push_back(QPointF(uniX(rng),uniY(rng)));
     }
 
